@@ -1,0 +1,88 @@
+::ng-deep #myToDo {
+	font-size: 16px;
+}
+::ng-deep #switch input {    
+	display:none;
+}
+
+::ng-deep #switch {
+	width: 50px;
+	height: 25px;      
+	transform:translateY(50%);   
+}
+
+::ng-deep #switch .slider {    
+	position:absolute;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+    border-radius:30px;
+    box-shadow:0 0 0 2px #777, 0 0 4px #777;
+    cursor:pointer;
+    border:4px solid transparent;
+    overflow:hidden;
+    transition:.4s;
+}
+
+::ng-deep #switch .slider:before {
+	position:absolute;
+    content:"";
+    width:100%;
+    height:100%;
+    background:#777;
+    border-radius:25px;
+    transform:translateX(-25px);
+    transition:.4s;
+}
+
+::ng-deep #switch input:checked + .slider:before {
+	transform:translateX(25px);
+    background:limeGreen;
+}
+
+::ng-deep #switch input:checked + .slider {
+	box-shadow:0 0 0 2px limeGreen,0 0 2px limeGreen;
+}
+
+
+@media (max-width:545px){
+	::ng-deep #myToDo {
+		font-size: 14px;
+	}	
+	::ng-deep #switch .slider:before {	
+		transform:translateX(-9px)!important;
+	}
+	::ng-deep #switch input:checked + .slider:before {	
+		transform:translateX(9px)!important;
+	}
+	::ng-deep #switch{
+		height: 15px;
+		width: 25px;
+		margin-top:-4px
+	}
+	::ng-deep .card-header{
+		padding:0.4rem 0.9rem;
+	}
+	::ng-deep img.list-tools{
+		height: 30px!important;
+		margin:0!important;
+	}
+	::ng-deep img.tools{
+		height:20px;
+		margin:0!important 
+	}
+	::ng-deep input.item-input {
+		padding: 0 0.1rem;
+	}
+	::ng-deep .list-group-item,#subitem.subitemId{
+		padding:0.4rem 0.5rem;
+	}
+	.container{
+		padding:0 2px 0 2px;
+	}
+	::ng-deep .card-body{
+		padding:1rem 0.3rem
+	}
+}
+

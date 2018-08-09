@@ -1,0 +1,15 @@
+@media (max-width:545px){
+    .container{
+        font-size: 14px;
+    }
+    a.btn{
+        font-size:12px;
+        padding:1px 3px;
+    }
+    a.nav-link{
+        padding:4px 2px ;
+    }
+    div.card-body{
+        padding:10px 0
+    }
+}

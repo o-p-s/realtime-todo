@@ -1,0 +1,50 @@
+
+<div class="card-header d-inline-flex flex-row m-0 w-100"  style="background-color: #212121">
+    <img class="list-tools" width="25" (click)="setEditFlag()" src="./../../../assets/icons8-edit.svg" data-toggle="tooltip" title="Create a new list" />
+   
+    <div class="d-flex flex-grow-1" > 
+        <input class="mb-0 border-0 text-white w-100 pl-2 pr-2" style="background-color: #212121" [disabled]="!editNewList" placeholder="New List" [(ngModel)]="newList.listName" /> 
+    </div>                 
+    <img *ngIf="editNewList" class="ml-2 list-tools" width="25"  src="./../../../assets/icons8-plus.svg" data-toggle="tooltip" title="Raise a new element" (click)="increaseItem()" [attr.data-toggle]="pActive?'collapse':''" href="#newList" />
+    <img *ngIf="editNewList" class="ml-2 list-tools" width="25" src="./../../../assets/icons8-checkmark.svg" data-toggle="tooltip" title="Save the list"  (click)="addNewList()"/>
+    <img *ngIf="editNewList" class="ml-2 list-tools" width="25"src="./assets/icons8-delete.svg" data-toggle="tooltip" title="Delete the list" (click)="deleteNewList()" />
+      
+</div>
+
+<div id="newList" class="collapse" role="tabpanel"  > 
+    <div *ngIf="newList.items?.length!=0" class="card-body" style="background-color: #e0e4cc">
+        <ul class="list-group text-body items"> 
+            <li *ngFor="let item of newList.items" class="list-group-item border-0 w-100" style="background-color: #e0e4cc" >
+                <div  class="d-inline-flex flex-row m-0 w-100 " >
+                <div class="d-inline-flex flex-grow-1"  >
+                  <input class="item-input pl-2 pr-2 border-0 border-bottom w-100" style="background-color: #e0e4cc" [(ngModel)]="item.itemName"  role="tab" placeholder="New Item"/>
+                </div>
+                <img *ngIf="editNewList" class="ml-2 tools" width="25" src="./../../../assets/icons8-plus.svg" data-toggle="tooltip" title="Raise a new child element" (click)="increaseSubitem(item.itemId)" [attr.data-toggle]="item.active?'collapse':''" [attr.href]="'#'+item.itemId"/> 
+                 <img id="remove-new-item" class="ml-2 mr-2 tools" width="25" src="./assets/icons8-delete.svg" data-toggle="tooltip" title="Drop this element" (click)="removeItem({itemId:item.itemId})"/>               
+                 <label id="switch"  class="d-inline-flex tools mb-0" data-toggle="tooltip" title="Mark this element Open/Close">
+                        <input class="open-switch" type="checkbox" [checked]="true" [(ngModel)]="item.open" >
+                        <span class="slider"></span>
+                </label>
+                </div>
+
+                <!-- SUBITEMS -->
+                <div id="{{item.itemId}}" class="collapse container p-0">                                
+                  <ul  class="list-group text-body"> 
+                    <li *ngFor="let subitem of item.subitems" id="subitem.subitemId" class="w-100 list-group-item border-0" style="background-color: #e0e4cc">
+                    <div class="d-inline-flex flex-row p-0 w-100">
+                        <div class="d-inline-flex flex-grow-1">
+                        <input class="w-100 border-0" style="background-color: #e0e4cc" placeholder="New sub Item" [(ngModel)]="subitem.subitemName"/>
+                        </div>
+                        <img  class="tools" width="25" src="./assets/icons8-delete.svg" data-toggle="tooltip" title="Drop this child element" (click)="removeSubitem({'itemId':item.itemId,'subitemId':subitem.subitemId})" />
+                        <label id="switch" class="d-inline-flex" data-toggle="tooltip" title="Mark this element Open/Close">
+                            <input  class="open-switch" type="checkbox" [checked]="true"[(ngModel)]="subitem.open">
+                            <span class="slider"></span>
+                        </label>
+                     </div>   
+                    </li>
+                  </ul>
+              </div>
+            </li>
+        </ul>
+    </div>                             
+</div>

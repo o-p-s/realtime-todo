@@ -1,0 +1,76 @@
+<div id="myToDo" class="d-flex justify-content-center mt-3 mb-3" >
+  <div class="card text-white container" style="background-color: #212121">
+    <div class="card-header h5 text-center" style="outline:none" tabindex="0" (keypress)="getBackList($event)">{{socketService.friend?.userName || 'My'}} ToDo List
+       <img id="undo" class="ml-2 float-right" width="25" alt="undo" src="./assets/icons8-undelete.svg" data-toggle="tooltip" title="Restore last Create/Delete list operation" (click)="undoLastOperation({'action':'userList'})" />
+    </div>
+
+    <div class="card-body" style="background-color: #212121">
+        <div id="panels1" role="tablist"> 
+            <div class="card "style="outline:none;border:1px solid #fd7e24" *ngFor="let list of lists" tabindex="0" (keypress)="getBackInList($event)">
+
+                <!--LISTS-->
+                <div id="{list.listId}" class="card-header d-inline-flex flex-row m-0 w-100" style="background-color: #262626" > 
+                    <img width="25" class="list-tools" (click)="setEditFlag({'list':list.listId})" src="./assets/icons8-edit.svg" data-toggle="tooltip" title="Edit this list" [attr.data-toggle]="list.collapse?'collapse':''" [attr.href]="'#'+list.listId"/>
+                    <div DebounceClick (debounceClick)="setCookies({'listId':list.listId,'listName':list.listName})" class="d-flex flex-grow-1"  [attr.data-toggle]="list.edit?'':'collapse'" [attr.href]="'#'+list.listId" >
+                      <input class="mb-0 border-0 text-white pl-2 pr-2 w-100"   style="background-color: #262626;font-size:1.2em;font-weight: 800" [disabled]="!list.edit" [(ngModel)]="list.listName"  placeholder="New List" /> 
+                    </div>
+                    <img *ngIf="list.edit" class="ml-2 list-tools" width="25" src="./../../../assets/icons8-plus.svg" data-toggle="tooltip" title="Raise a new item in this List" (click)="increaseElement('item')" />        
+                    <img *ngIf="list.edit" class="ml-2 list-tools" width="25" src="./assets/icons8-checkmark.svg" data-toggle="tooltip" title="Save the name of the list." (click)="saveData('list')" />
+                    <img *ngIf="list.edit" class="ml-2 list-tools" width="25" src="./assets/icons8-delete.svg" data-toggle="tooltip" title="Delete this list" (click)="deleteList({'listId':list.listId,'listName':list.listName})"/>
+                    <img class="ml-2 list-tools" width="25" src="./assets/icons8-undelete.svg" data-toggle="tooltip" title="Restore last Operation performed in this list" (click)="undoLastOperation({'listId':list.listId})" />
+                                
+                </div>
+                
+                <!--ITEMS-->
+                <div id="{{list.listId}}" class="collapse " role="tabpanel" data-parent="#panels1"> 
+                    <div class="card-body m-0 p-3" style="background-color: #e0e4cc" >
+                        <ul class="list-group text-body items"> 
+                            <li *ngFor="let item of list.items" class="list-group-item w-100 flex-column border-0" style="background-color: #e0e4cc" >
+                              <div  class="d-inline-flex flex-row m-0 w-100 " >
+                                <img width="25" class="tools" alt="edit-item-name" (click)="setEditFlag({'item':item.itemId})" src="./assets/icons8-edit.svg" data-toggle="tooltip" title="Edit this element" [attr.data-toggle]="item.collapse?'collapse':''" [attr.href]="'#'+item.itemId"/> 
+                                <div DebounceClick (debounceClick)="setCookies({'itemId':item.itemId,'itemName':item.itemName})" class="d-inline-flex flex-grow-1" [attr.data-toggle]="item.edit?'':'collapse'" [attr.href]="'#'+item.itemId" >
+                                  <input class="item-input pl-2 pr-2 border-0 border-bottom w-100" style="background-color: #e0e4cc"[disabled]="!item.edit" [(ngModel)]="item.itemName" placeholder="New Item"/>
+                                </div>
+                                <img *ngIf="item.edit" class="ml-2 tools" width="25"  src="./../../../assets/icons8-plus.svg" data-toggle="tooltip" title="Raise a new child element" (click)="increaseElement('subitem')" />         
+                                <img *ngIf="item.edit" class="ml-2 tools" width="25" data-toggle="tooltip" title="Save the name of the element" src="./assets/icons8-checkmark.svg" (click)="saveData('item')"/>
+                                <img *ngIf="item.edit" class="ml-2 mr-2 tools" width="25" src="./assets/icons8-delete.svg" data-toggle="tooltip" title="Delete this element"(click)="decreaseElement('item')"/>
+                                <label id="switch" class="d-inline-flex mb-0 tools" data-toggle="tooltip" title="Mark this item Open/Close" (click)="setCookies({'itemId':item.itemId,'itemName':item.itemName})" >
+                                  <input class="open-switch" type="checkbox" [(ngModel)]="item.open" (click)="saveData('itemState')">
+                                  <span class="slider"></span>
+                                </label>
+                              </div>
+
+                                <!-- SUBITEMS -->
+                                <div id="{{item.itemId}}" class="container collapse p-0">                                
+                                  <ul class="list-group text-body "> 
+                                    <li *ngFor="let subitem of item.subitems" id="subitem.subitemId" class="list-group-item border-0 w-100"  style="background-color: #e0e4cc">
+                                      <div class="d-inline-flex flex-row p-0 w-100 ">
+                                        <div class="d-inline-flex flex-grow-1"  (click)="setCookies({'subitemId':subitem.subitemId,'subitemName':subitem.subitemId})">
+                                          <input (click)="setEditFlag({'subitem':subitem.subitemId})" class="w-100 border-0" style="background-color: #e0e4cc" [(ngModel)]="subitem.subitemName" placeholder="New sub Item"/>
+                                        </div>
+                                        <img class="ml-2"class="tools" *ngIf="subitem.edit" width="25" src="./assets/icons8-checkmark.svg" (click)="saveData('subitem')" data-toggle="tooltip" title="Save the name of this element" />
+                                        <img class="ml-2 mr-2 tools" *ngIf="subitem.edit" width="25" src="./assets/icons8-delete.svg" (click)="decreaseElement('subitem')" data-toggle="tooltip" title="Delete this child element"/>
+                                        <label id="switch" class="d-inline-flex" [ngStyle]="{'margin-top':(subitem.edit==false)?'-6px':''}" (click)="setCookies({'subitemId':subitem.subitemId,'subitemName':subitem.subitemName})" data-toggle="tooltip" title="Mark this elemnt Open/Close">
+                                          <input  class="open-switch" type="checkbox"  [(ngModel)]="subitem.open" (click)="saveData('subitemState')" >
+                                          <span class="slider"></span>
+                                        </label>                                  
+                                      </div>
+                                    </li>
+                                  </ul>
+                              </div>
+                            </li>
+                        </ul>
+                    </div>                             
+                </div>
+            </div> 
+            <div class="card" style="border:1px solid #fd7e24">
+            <new-list (createList)="createList($event)" [lists]="lists" ></new-list>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center mb-3">
+    <span *ngIf="!loaderState"  (click)="moreLists()">More Results</span>
+    <loader *ngIf="loaderState" ></loader>
+    </div>
+  </div>
+</div>

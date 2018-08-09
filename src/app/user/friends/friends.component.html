@@ -1,0 +1,79 @@
+  <div class="container mt-3">
+    <div class=" d-flex justify-content-center">
+      <div class="card text-white mb-3 col-xl-6" style="background-color: #212121">
+            <div class="card-header h2 text-center">Users</div>
+            <div class="card-body">
+                <ul class="nav nav-tabs" role="tablist"> 
+                    <li class="nav-item"> 
+                        <a class="nav-link active m-0 font-weight-bold" href="#tab1" data-toggle="tab">Friends
+                            <span class="badge">{{friendsList?.length||0}}</span>
+                        </a> 
+                    </li>                     
+                    <li class="nav-item"> 
+                        <a class="nav-link m-0 font-weight-bold" href="#tab2" data-toggle="tab">All Users
+                            <span class="badge">{{usersList?.length||0}}</span>
+                        </a> 
+                    </li>                     
+                    <li class="nav-item"> 
+                        <a class="nav-link m-0 font-weight-bold" href="#tab3" data-toggle="tab">Requests
+                            <span class="badge">{{requestsList?.length||0}}</span>
+                        </a> 
+                    </li>                     
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active mt-3" id="tab1">
+                        <div *ngFor="let friend of friendsList" class="d-inline-flex w-100 mb-2">
+                            <div class="d-flex flex-column col-2 pl-1 pr-0 justify-content-center">
+                                <img src="./../../../assets/default-user.png" class="rounded-circle w-100 ">
+                            </div>
+                            <div class="d-flex flex-column justify-content-center col-10 pl-3">
+                                <div class="pt-1 pb-1 " id="user-name">{{friend.userName}}</div>
+                                <div ><a (click)="setfriend({'userId':friend.userId,'userName':friend.userName})"class="mr-3 btn btn-info">View Lists</a>
+                                <a (click)="removeFriend({'userId':friend.userId,'userName':friend.userName})" class="btn btn-danger">Remove</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane mt-3 " id="tab2">
+                        <div *ngFor="let user of usersList" class="d-inline-flex w-100 mb-2">
+                            <div class="d-flex flex-column col-2 pl-1 pr-0 justify-content-center">
+                                <img src="./../../../assets/default-user.png" class="rounded-circle w-100">
+                            </div>
+                            <div class="d-flex flex-column justify-content-center col-10">
+                                <div id="user-name">{{user.userName}}</div>
+                                <div class="pr-3 d-inline-flex">
+                                    <div *ngIf="!user.friends">
+                                    <a *ngIf="!user.active" (click)="sendRequest({receiverId:user.userId,receiverName:user.userName})" class="btn btn-info">Send Request</a>
+                                    <a *ngIf="user.active" disabled class="btn btn-info">Request Pending</a>
+                                    </div>
+                                    <a *ngIf="user.friends" disabled class="btn btn-success">Friends</a>
+                                </div>
+                            </div>
+                        </div>                         
+                    </div>
+                    <div class="tab-pane mt-3" id="tab3">
+                        <div *ngFor="let request of requestsList" class="d-inline-flex w-100 mb-2">
+                            <div class="d-flex flex-column col-2 pl-1 pr-0 justify-content-center">
+                                <img src="./../../../assets/default-user.png" class="rounded-circle w-100">
+                            </div>
+                            <div class="d-flex flex-column justify-content-center col-10">
+                                <div *ngIf="request.senderId==userInfo.userId">Request sent to {{request.receiverName}}</div>
+                                <div *ngIf="request.senderId!=userInfo.userId">Request received from {{request.senderName}}</div>
+                               
+                                <div class="pr-3 d-inline-flex">
+                                    <a *ngIf="request.senderId==userInfo.userId" (click)="cancelRequest(request)" class="mr-3 btn btn-success">Cancel</a>
+                                    
+                                    <a *ngIf="request.senderId!=userInfo.userId" (click)="acceptRequest(request)" class="mr-3 btn btn-success">Accept</a>
+                                    <a *ngIf="request.senderId!=userInfo.userId" (click)="declineRequest(request)" class="btn btn-danger">Decline</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center mb-3">
+                                <span *ngIf="!loaderState"  (click)="getMore()">More Requests</span>
+                                <loader *ngIf="loaderState" ></loader>
+                        </div>                         
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

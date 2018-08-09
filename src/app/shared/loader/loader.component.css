@@ -1,0 +1,12 @@
+
+#loader span{
+    font-size: 40px;
+    animation-name: blink;
+    animation-duration: 1.4s;
+    animation-iteration-count:infinite;
+}
+@keyframes blink {
+    0% { opacity: .2 }
+    20% {opacity: 1 }
+    100% { opacity: .2 }
+}
