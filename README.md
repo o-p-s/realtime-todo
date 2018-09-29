@@ -1,4 +1,4 @@
-# TODO
+# Real-Time To do List
 
 This project is a platform where user can maintain his TO-DO List. User can create any number of lists, items & sub-items. User is allowed to undo every operation performed on the list or list of lists. Moreover, a user can make new friends and their friends can also CRUD on his/her TO-DO Lists. 
 
